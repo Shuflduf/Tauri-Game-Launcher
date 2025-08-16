@@ -4,7 +4,7 @@
 
   type Game = {
     name: string;
-    launchCommand: string;
+    launch_command: string;
   };
 
   let name = $state("");
@@ -31,7 +31,7 @@
   function tmpGame(): Game {
     let newGame: Game = {
       name: "Risk of Rain 2",
-      launchCommand: "flatpak run com.valvesoftware.Steam steam://run/632360",
+      launch_command: "flatpak run com.valvesoftware.Steam steam://run/632360",
     };
     return newGame;
   }

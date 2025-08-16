@@ -1,8 +1,14 @@
+use std::fs;
+
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
 pub struct Game {
     pub name: String,
     pub launch_command: String,
+}
+
+#[derive(serde::Deserialize, serde::Serialize)]
+struct SavedGames {
+    games: Vec<Game>,
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -14,15 +20,18 @@ fn greet(name: &str) -> String {
 #[tauri::command]
 fn add_game(game: Game) {
     println!("{game:?}");
+    let toml_data = fs::read_to_string("save.toml").unwrap();
+    let mut saved_games: SavedGames = toml::from_str(&toml_data).unwrap();
+    saved_games.games.push(game);
+    let toml_data = toml::to_string(&saved_games).unwrap();
+    let _ = fs::write("save.toml", toml_data).unwrap();
 }
 
 #[tauri::command]
 fn current_games() -> Vec<Game> {
-    vec![Game {
-        name: String::from("ror2"),
-        launch_command: String::from("AAAA"),
-    }]
-    // println!("{game:?}");
+    let toml_data = fs::read_to_string("save.toml").unwrap();
+    let saved_games: SavedGames = toml::from_str(&toml_data).unwrap();
+    saved_games.games
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
