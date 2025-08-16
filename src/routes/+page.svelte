@@ -11,8 +11,9 @@
   let greetMsg = $state("");
   let games: Game[] = $state([]);
 
-  onMount(() => {
-    games.push(tmpGame());
+  onMount(async () => {
+    // games.push(tmpGame());
+    games = await invoke("current_games");
   });
 
   async function greet(event: Event) {
