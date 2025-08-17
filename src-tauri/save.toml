@@ -2,5 +2,12 @@
 name = "wow"
 launch_command = "v"
 description = "gaming"
-bg_color = "#cad5e2"
+bg_color = "#ed333b"
+text_color = "#000000"
+
+[[games]]
+name = "list"
+launch_command = "ls"
+description = "just runs ls"
+bg_color = "#99c1f1"
 text_color = "#000000"
