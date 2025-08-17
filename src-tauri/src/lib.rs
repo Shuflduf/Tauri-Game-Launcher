@@ -11,11 +11,21 @@ pub struct Game {
 
 #[derive(serde::Deserialize, serde::Serialize)]
 struct SavedGames {
-    games: Vec<Game>,
+    games: Option<Vec<Game>>,
+}
+
+impl SavedGames {
+    pub fn games_mut(&mut self) -> &mut Vec<Game> {
+        self.games.get_or_insert_with(Vec::new)
+    }
 }
 
 fn read_save_data() -> Result<SavedGames, String> {
-    let toml_data = fs::read_to_string("save.toml").map_err(|err| err.to_string())?;
+    let path = "save.toml";
+    if !std::path::Path::new(path).exists() {
+        fs::File::create(path).map_err(|err| err.to_string())?;
+    }
+    let toml_data = fs::read_to_string(path).map_err(|err| err.to_string())?;
     toml::from_str::<SavedGames>(&toml_data).map_err(|err| err.to_string())
 }
 
@@ -28,7 +38,7 @@ fn write_save_data(data: SavedGames) -> Result<(), String> {
 fn add_game(game: Game) -> Result<(), String> {
     println!("{game:?}");
     let mut saved_games = read_save_data()?;
-    saved_games.games.push(game);
+    saved_games.games_mut().push(game);
     write_save_data(saved_games)?;
 
     Ok(())
@@ -38,7 +48,7 @@ fn add_game(game: Game) -> Result<(), String> {
 fn edit_game(id: String, game: Game) -> Result<(), String> {
     println!("{id} -> {game:?}");
     let mut saved_games = read_save_data()?;
-    for g in saved_games.games.iter_mut() {
+    for g in saved_games.games_mut().iter_mut() {
         if g.name == id {
             *g = game;
             break;
@@ -51,7 +61,7 @@ fn edit_game(id: String, game: Game) -> Result<(), String> {
 
 #[tauri::command]
 fn current_games() -> Result<Vec<Game>, String> {
-    Ok(read_save_data()?.games)
+    Ok(read_save_data()?.games.unwrap_or_default())
 }
 
 #[tauri::command]
@@ -73,7 +83,7 @@ fn launch_game(command: String) -> Result<(), String> {
 fn delete_game(game: Game) -> Result<(), String> {
     let mut saved_games = read_save_data()?;
 
-    saved_games.games.retain(|g| g != &game);
+    saved_games.games_mut().retain(|g| g != &game);
     write_save_data(saved_games)?;
 
     Ok(())
