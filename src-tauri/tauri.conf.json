@@ -12,9 +12,12 @@
   "app": {
     "windows": [
       {
-        "title": "tauri-game-launcher",
-        "width": 800,
-        "height": 600
+        "title": "Fizzler Game Launcher",
+        "width": 1000,
+        "minWidth": 1000,
+        "height": 600,
+        "minHeight": 600,
+        "center": true
       }
     ],
     "security": {
