@@ -1,0 +1,6 @@
+[[games]]
+name = "wow"
+launch_command = "v"
+description = "gaming"
+bg_color = "#cad5e2"
+text_color = "#000000"

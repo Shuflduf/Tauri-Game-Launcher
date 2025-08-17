@@ -12,11 +12,11 @@
   let selectedGameIndex = $state(0);
   let selectedGame: Game = $derived(games[selectedGameIndex]);
 
-  onMount(async () => {
-    await refresh();
+  onMount(() => {
+    refresh();
   });
 
-  async function refresh() {
+  function refresh() {
     invoke<Game[]>("current_games")
       .then((newGames: Game[]) => {
         games = newGames;
@@ -34,9 +34,10 @@
     newGameMenu.startEditGame(game);
   }
 
-  async function launchGame(game: Game) {
-    const res = await invoke("launch_game", { command: game.launch_command });
-    console.log(res);
+  function launchGame(game: Game) {
+    invoke("launch_game", { command: game.launch_command }).catch(
+      (err: string) => (errorMessage = err),
+    );
   }
 </script>
 
