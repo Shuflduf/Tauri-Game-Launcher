@@ -6,6 +6,11 @@
   import ErrorPopup from "./ErrorPopup.svelte";
   import Chevron from "./Chevron.svelte";
 
+  enum Dir {
+    Up,
+    Down,
+  }
+
   let newGameMenu: any;
 
   let errorMessage = $state("");
@@ -40,9 +45,23 @@
       (err: string) => (errorMessage = err),
     );
   }
-</script>
 
-<ErrorPopup message={errorMessage} />
+  function moveGame(dir: Dir, index: number) {
+    if (
+      (dir == Dir.Up && index == 0) ||
+      (dir == Dir.Down && index == games.length - 1)
+    ) {
+      return;
+    }
+
+    invoke("move_game", {
+      game_index: index,
+      new_index: index + (dir == Dir.Down ? 1 : -1),
+    })
+      .then(() => refresh())
+      .catch((err: string) => (errorMessage = err));
+  }
+</script>
 
 <div class="flex flex-row p-4 gap-4 w-screen h-screen">
   <div class="flex flex-col gap-4 overflow-y-auto w-40">
@@ -58,10 +77,16 @@
         </button>
         <hr class="mx-4" />
         <div class="flex flex-row justify-evenly">
-          <button class="cursor-pointer">
+          <button
+            class="cursor-pointer"
+            onclick={() => moveGame(Dir.Up, index)}
+          >
             <Chevron class="fill-current rotate-90 size-8" />
           </button>
-          <button class="cursor-pointer">
+          <button
+            class="cursor-pointer"
+            onclick={() => moveGame(Dir.Down, index)}
+          >
             <Chevron class="fill-current -rotate-90 size-8" />
           </button>
         </div>
@@ -102,3 +127,5 @@
     {/if}
   </div>
 </div>
+
+<ErrorPopup message={errorMessage} />

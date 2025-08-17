@@ -61,7 +61,6 @@
   }
 
   function editGame() {
-    // console.log(game);
     invoke("edit_game", { id: oldGame.name, game: getNewGame() })
       .then(() => {
         menuOpen = false;
@@ -80,7 +79,6 @@
 
   function onPresetSelected(event: Event) {
     const target = event.target as HTMLSelectElement;
-    console.log(target.value);
     switch (target.value) {
       case "exe":
         // invoke("select_exe")

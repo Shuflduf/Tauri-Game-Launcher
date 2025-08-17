@@ -36,7 +36,6 @@ fn write_save_data(data: SavedGames) -> Result<(), String> {
 
 #[tauri::command]
 fn add_game(game: Game) -> Result<(), String> {
-    println!("{game:?}");
     let mut saved_games = read_save_data()?;
     saved_games.games_mut().push(game);
     write_save_data(saved_games)?;
@@ -46,7 +45,6 @@ fn add_game(game: Game) -> Result<(), String> {
 
 #[tauri::command]
 fn edit_game(id: String, game: Game) -> Result<(), String> {
-    println!("{id} -> {game:?}");
     let mut saved_games = read_save_data()?;
     for g in saved_games.games_mut().iter_mut() {
         if g.name == id {
@@ -66,8 +64,6 @@ fn current_games() -> Result<Vec<Game>, String> {
 
 #[tauri::command]
 fn launch_game(command: String) -> Result<(), String> {
-    println!("Executing {command}");
-
     let mut parts = command.split_whitespace();
     let program = parts.next().ok_or("Empty command")?;
     let args: Vec<&str> = parts.collect();
@@ -89,6 +85,18 @@ fn delete_game(game: Game) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command(rename_all = "snake_case")]
+fn move_game(game_index: i32, new_index: i32) -> Result<(), String> {
+    let mut saved_games = read_save_data()?;
+    let games = saved_games.games_mut();
+
+    let game = games.remove(game_index as usize);
+    games.insert(new_index as usize, game);
+
+    write_save_data(saved_games)?;
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -99,6 +107,7 @@ pub fn run() {
             edit_game,
             launch_game,
             delete_game,
+            move_game,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

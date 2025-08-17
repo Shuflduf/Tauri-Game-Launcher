@@ -1,11 +1,4 @@
 [[games]]
-name = "a"
-launch_command = "a"
-description = "a"
-bg_color = "#000000"
-text_color = "#241f31"
-
-[[games]]
 name = "b"
 launch_command = "f"
 description = "dascxa"
