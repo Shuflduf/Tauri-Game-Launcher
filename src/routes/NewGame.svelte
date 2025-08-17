@@ -4,8 +4,10 @@
 
   let {
     onChange,
+    onError,
   }: {
     onChange?: () => void;
+    onError?: (err: string) => void;
   } = $props();
 
   let menuOpen = $state(false);
@@ -24,12 +26,16 @@
     resetInputs();
   }
 
-  async function addGame() {
-    await invoke("add_game", { game: getNewGame() });
-    menuOpen = false;
-    onChange?.();
+  function addGame() {
+    invoke("add_game", { game: getNewGame() })
+      .then(() => {
+        menuOpen = false;
+        onChange?.();
+      })
+      .catch((err: string) => onError?.(err));
   }
 
+  // TODO: get rid of this
   export function startEditGame(game: Game) {
     menuOpen = true;
     editing = true;
@@ -54,11 +60,14 @@
     return newGame;
   }
 
-  async function editGame() {
+  function editGame() {
     // console.log(game);
-    await invoke("edit_game", { id: oldGame.name, game: getNewGame() });
-    menuOpen = false;
-    onChange?.();
+    invoke("edit_game", { id: oldGame.name, game: getNewGame() })
+      .then(() => {
+        menuOpen = false;
+        onChange?.();
+      })
+      .catch((err: string) => onError?.(err));
   }
 
   function resetInputs() {
@@ -86,10 +95,13 @@
     }
   }
 
-  async function deleteGame() {
-    await invoke("delete_game", { game: oldGame });
-    menuOpen = false;
-    onChange?.();
+  function deleteGame() {
+    invoke("delete_game", { game: oldGame })
+      .then(() => {
+        menuOpen = false;
+        onChange?.();
+      })
+      .catch((err: string) => onError?.(err));
   }
 </script>
 

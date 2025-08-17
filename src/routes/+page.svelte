@@ -56,7 +56,11 @@
         </p>
       </button>
     {/each}
-    <NewGame onChange={refresh} bind:this={newGameMenu} />
+    <NewGame
+      onChange={refresh}
+      onError={(err: string) => (errorMessage = err)}
+      bind:this={newGameMenu}
+    />
   </div>
   <div
     class="h-full w-full p-4 flex justify-between flex-col"
