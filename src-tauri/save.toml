@@ -1,13 +1,27 @@
 [[games]]
-name = "wow"
-launch_command = "v"
-description = "gaming"
-bg_color = "#ed333b"
+name = "a"
+launch_command = "a"
+description = "a"
+bg_color = "#000000"
+text_color = "#241f31"
+
+[[games]]
+name = "b"
+launch_command = "f"
+description = "dascxa"
+bg_color = "#cad5e2"
 text_color = "#000000"
 
 [[games]]
-name = "list"
-launch_command = "ls"
-description = "just runs ls"
-bg_color = "#99c1f1"
-text_color = "#000000"
+name = "c"
+launch_command = ""
+description = "egerge"
+bg_color = "#f9f06b"
+text_color = "#1a5fb4"
+
+[[games]]
+name = "deltaurn"
+launch_command = ""
+description = ""
+bg_color = "#000000"
+text_color = "#ffffff"

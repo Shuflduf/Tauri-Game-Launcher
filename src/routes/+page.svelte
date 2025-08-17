@@ -4,6 +4,7 @@
   import NewGame from "./NewGame.svelte";
   import type { Game } from "../lib";
   import ErrorPopup from "./ErrorPopup.svelte";
+  import Chevron from "./Chevron.svelte";
 
   let newGameMenu: any;
 
@@ -46,15 +47,25 @@
 <div class="flex flex-row p-4 gap-4 w-screen h-screen">
   <div class="flex flex-col gap-4 overflow-y-auto w-40">
     {#each games as game, index}
-      <button
-        onclick={() => onGameSelected(index)}
-        class="w-32 min-h-40 flex items-center p-4 cursor-pointer"
-        style="background-color: {game.bg_color}; color: {game.text_color}"
-      >
-        <p class="w-full font-bold text-center">
-          {game.name}
-        </p>
-      </button>
+      <div style="background-color: {game.bg_color}; color: {game.text_color}">
+        <button
+          onclick={() => onGameSelected(index)}
+          class="w-32 min-h-40 flex items-center cursor-pointer p-4"
+        >
+          <p class="w-full font-bold text-center">
+            {game.name}
+          </p>
+        </button>
+        <hr class="mx-4" />
+        <div class="flex flex-row justify-evenly">
+          <button class="cursor-pointer">
+            <Chevron class="fill-current rotate-90 size-8" />
+          </button>
+          <button class="cursor-pointer">
+            <Chevron class="fill-current -rotate-90 size-8" />
+          </button>
+        </div>
+      </div>
     {/each}
     <NewGame
       onChange={refresh}
