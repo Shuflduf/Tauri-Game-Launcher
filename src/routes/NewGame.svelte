@@ -12,6 +12,8 @@
   let newName = $state("");
   let newLaunch = $state("");
   let newDesc = $state("");
+  let newBgCol = $state("");
+  let newTextCol = $state("");
 
   let editing = $state(false);
   let oldGame: Game;
@@ -23,12 +25,7 @@
   }
 
   async function addGame() {
-    const newGame: Game = {
-      name: newName,
-      launch_command: newLaunch,
-      description: newDesc,
-    };
-    await invoke("add_game", { game: newGame });
+    await invoke("add_game", { game: getNewGame() });
     menuOpen = false;
     onChange?.();
   }
@@ -41,16 +38,25 @@
     newName = game.name;
     newLaunch = game.launch_command;
     newDesc = game.description;
+    newBgCol = game.bg_color;
+    newTextCol = game.text_color;
   }
 
-  async function editGame() {
-    // console.log(game);
+  function getNewGame(): Game {
     const newGame: Game = {
       name: newName,
       launch_command: newLaunch,
       description: newDesc,
+      bg_color: newBgCol,
+      text_color: newTextCol,
     };
-    await invoke("edit_game", { id: oldGame.name, game: newGame });
+
+    return newGame;
+  }
+
+  async function editGame() {
+    // console.log(game);
+    await invoke("edit_game", { id: oldGame.name, game: getNewGame() });
     menuOpen = false;
     onChange?.();
   }
@@ -59,6 +65,8 @@
     newName = "";
     newLaunch = "";
     newDesc = "";
+    newBgCol = "#cad5e2";
+    newTextCol = "#000000";
   }
 
   function onPresetSelected(event: Event) {
@@ -110,6 +118,20 @@
           <option value="exe">(Windows) .exe</option>
           <option value="flatpak">(Linux) Flatpak Steam</option>
         </select>
+      </div>
+      <div class="flex flex-row gap-4 items-center h-10">
+        <p class="text-nowrap">BG Color:</p>
+        <input
+          type="color"
+          bind:value={newBgCol}
+          class="w-full h-full p-0 cursor-pointer"
+        />
+        <p class="text-nowrap">Text Color:</p>
+        <input
+          type="color"
+          bind:value={newTextCol}
+          class="w-full h-full cursor-pointer"
+        />
       </div>
       <div class="flex flex-row gap-4">
         <input

@@ -5,6 +5,8 @@ pub struct Game {
     pub name: String,
     pub launch_command: String,
     pub description: String,
+    pub bg_color: String,
+    pub text_color: String,
 }
 
 #[derive(serde::Deserialize, serde::Serialize)]

@@ -8,6 +8,7 @@
 
   let games: Game[] = $state([]);
   let selectedGameIndex = $state(0);
+  let selectedGame: Game = $derived(games[selectedGameIndex]);
 
   onMount(async () => {
     await refresh();
@@ -36,19 +37,23 @@
     {#each games as game, index}
       <button
         onclick={() => onGameSelected(index)}
-        class="bg-slate-300 w-32 min-h-40 flex items-center p-4 cursor-pointer"
+        class="w-32 min-h-40 flex items-center p-4 cursor-pointer"
+        style="background-color: {game.bg_color}; color: {game.text_color}"
       >
-        <p class="text-center w-full">
+        <p class="w-full font-bold text-center">
           {game.name}
         </p>
       </button>
     {/each}
     <NewGame onChange={refresh} bind:this={newGameMenu} />
   </div>
-  <div class="bg-slate-300 h-full w-full p-4 flex justify-between flex-col">
+  <div
+    class="h-full w-full p-4 flex justify-between flex-col"
+    style="background-color:
+    {selectedGame ? selectedGame.bg_color : '#cad5e2'};"
+  >
     {#if games[selectedGameIndex]}
-      {@const selectedGame = games[selectedGameIndex]}
-      <div>
+      <div style="color: {selectedGame.text_color};">
         <h1 class="text-center text-4xl font-bold">{selectedGame.name}</h1>
         <hr class="my-4" />
         <p class="text-center">{selectedGame.description}</p>
