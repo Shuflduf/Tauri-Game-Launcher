@@ -65,7 +65,7 @@
       <div style="background-color: {game.bg_color}; color: {game.text_color}">
         <button
           onclick={() => onGameSelected(index)}
-          class="min-w-32 w-full min-h-40 flex items-center cursor-pointer p-4"
+          class="min-w-32 w-full min-h-40 flex items-center cursor-pointer justify-center overflow-x-clip"
         >
           <p class="w-full font-bold text-center text-xl">
             {game.name}
@@ -95,13 +95,15 @@
     />
   </div>
   <div
-    class="h-full w-full p-4 flex justify-between flex-col"
+    class="h-full w-full p-4 flex justify-between flex-col overflow-x-clip"
     style="background-color:
     {selectedGame ? selectedGame.bg_color : '#cad5e2'};"
   >
     {#if games[selectedGameIndex]}
       <div style="color: {selectedGame.text_color};">
-        <h1 class="text-center text-4xl font-bold">{selectedGame.name}</h1>
+        <h1 class="text-center text-4xl font-bold">
+          {selectedGame.name}
+        </h1>
         <hr class="my-4" />
         <p class="text-center">{selectedGame.description}</p>
       </div>

@@ -1,13 +1,20 @@
 [[games]]
-name = "c"
+name = "tauri"
 launch_command = ""
-description = "egerge"
-bg_color = "#f9f06b"
-text_color = "#1a5fb4"
+description = "i love it"
+bg_color = "#1c71d8"
+text_color = "#f9f06b"
 
 [[games]]
-name = "deltaurn"
-launch_command = ""
-description = ""
+name = "DELTARUNE"
+launch_command = "flatpak run com.valvesoftware.Steam steam://run/480"
+description = "deltrunening it"
 bg_color = "#000000"
 text_color = "#ffffff"
+
+[[games]]
+name = "LONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGG"
+launch_command = ""
+description = "LONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGG"
+bg_color = "#cad5e2"
+text_color = "#000000"
