@@ -14,20 +14,22 @@ struct SavedGames {
     games: Vec<Game>,
 }
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {name}! You've been greeted from Rust!")
+fn read_save_data() -> Result<SavedGames, String> {
+    let toml_data = fs::read_to_string("save.toml").map_err(|err| err.to_string())?;
+    toml::from_str::<SavedGames>(&toml_data).map_err(|err| err.to_string())
+}
+
+fn write_save_data(data: SavedGames) -> Result<(), String> {
+    let toml_data = toml::to_string(&data).map_err(|err| err.to_string())?;
+    fs::write("save.toml", toml_data).map_err(|err| err.to_string())
 }
 
 #[tauri::command]
 fn add_game(game: Game) -> Result<(), String> {
     println!("{game:?}");
-    let toml_data = fs::read_to_string("save.toml").map_err(|err| err.to_string())?;
-    let mut saved_games: SavedGames = toml::from_str(&toml_data).map_err(|err| err.to_string())?;
+    let mut saved_games = read_save_data()?;
     saved_games.games.push(game);
-    let toml_data = toml::to_string(&saved_games).map_err(|err| err.to_string())?;
-    fs::write("save.toml", toml_data).map_err(|err| err.to_string())?;
+    write_save_data(saved_games)?;
 
     Ok(())
 }
@@ -35,26 +37,21 @@ fn add_game(game: Game) -> Result<(), String> {
 #[tauri::command]
 fn edit_game(id: String, game: Game) -> Result<(), String> {
     println!("{id} -> {game:?}");
-    let toml_data = fs::read_to_string("save.toml").map_err(|err| err.to_string())?;
-    let mut saved_games: SavedGames = toml::from_str(&toml_data).map_err(|err| err.to_string())?;
+    let mut saved_games = read_save_data()?;
     for g in saved_games.games.iter_mut() {
         if g.name == id {
             *g = game;
             break;
         }
     }
-    let toml_data = toml::to_string(&saved_games).map_err(|err| err.to_string())?;
-    fs::write("save.toml", toml_data).map_err(|err| err.to_string())?;
+    write_save_data(saved_games)?;
 
     Ok(())
 }
 
 #[tauri::command]
 fn current_games() -> Result<Vec<Game>, String> {
-    let toml_data = fs::read_to_string("save.toml").map_err(|err| err.to_string())?;
-    let saved_games: SavedGames = toml::from_str(&toml_data).map_err(|err| err.to_string())?;
-
-    Ok(saved_games.games)
+    Ok(read_save_data()?.games)
 }
 
 #[tauri::command]
@@ -73,12 +70,13 @@ fn launch_game(command: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn delete_game(game: Game) {
-    let toml_data = fs::read_to_string("save.toml").unwrap();
-    let mut saved_games: SavedGames = toml::from_str(&toml_data).unwrap();
+fn delete_game(game: Game) -> Result<(), String> {
+    let mut saved_games = read_save_data()?;
+
     saved_games.games.retain(|g| g != &game);
-    let toml_data = toml::to_string(&saved_games).unwrap();
-    let _res = fs::write("save.toml", toml_data);
+    write_save_data(saved_games)?;
+
+    Ok(())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -86,7 +84,6 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            greet,
             add_game,
             current_games,
             edit_game,
