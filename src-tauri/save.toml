@@ -4,10 +4,3 @@ launch_command = "flatpak run com.valvesoftware.Steam steam://run/480"
 description = "deltarune gamin"
 bg_color = "#000000"
 text_color = "#ffffff"
-
-[[games]]
-name = "red"
-launch_command = "a"
-description = "a"
-bg_color = "#a51d2d"
-text_color = "#3d3846"

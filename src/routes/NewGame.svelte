@@ -85,6 +85,12 @@
         break;
     }
   }
+
+  async function deleteGame() {
+    await invoke("delete_game", { game: oldGame });
+    menuOpen = false;
+    onChange?.();
+  }
 </script>
 
 <button
@@ -146,6 +152,14 @@
           value="Cancel"
           onclick={() => (menuOpen = false)}
         />
+        {#if editing}
+          <input
+            type="submit"
+            class="p-4 w-full bg-black text-white cursor-pointer"
+            value="Delete"
+            onclick={() => deleteGame()}
+          />
+        {/if}
       </div>
     </div>
   </div>

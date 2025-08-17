@@ -1,6 +1,6 @@
 use std::{fs, process::Command};
 
-#[derive(serde::Deserialize, serde::Serialize, Debug)]
+#[derive(serde::Deserialize, serde::Serialize, Debug, PartialEq)]
 pub struct Game {
     pub name: String,
     pub launch_command: String,
@@ -69,6 +69,15 @@ fn launch_game(command: String) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+fn delete_game(game: Game) {
+    let toml_data = fs::read_to_string("save.toml").unwrap();
+    let mut saved_games: SavedGames = toml::from_str(&toml_data).unwrap();
+    saved_games.games.retain(|g| g != &game);
+    let toml_data = toml::to_string(&saved_games).unwrap();
+    let _res = fs::write("save.toml", toml_data);
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -79,6 +88,7 @@ pub fn run() {
             current_games,
             edit_game,
             launch_game,
+            delete_game,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
