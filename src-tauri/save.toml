@@ -1,6 +1,6 @@
 [[games]]
 name = "DELTARUNE gaming"
-launch_command = "survey_program"
+launch_command = "flatpak run com.valvesoftware.Steam steam://run/480"
 description = "deltarune gaming"
 
 [[games]]
@@ -15,5 +15,15 @@ description = "Risk of Rain Returns 2 the second: new and improved"
 
 [[games]]
 name = " dsflsdf 🐸️ kjsdnf 🚀️"
-launch_command = "k hfsdfh dsfjsdjf "
+launch_command = "ls"
 description = "gaming"
+
+[[games]]
+name = "Slack"
+launch_command = "slack"
+description = "slacking it rn"
+
+[[games]]
+name = "Godot Engine"
+launch_command = "flatpak run com.valvesoftware.Steam steam://run/404790"
+description = "Godot Engine is a feature-packed, cross-platform game engine to create 2D and 3D games from a unified interface. It provides a comprehensive set of common tools, so that you can focus on making games without having to reinvent the wheel."

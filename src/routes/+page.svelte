@@ -6,8 +6,6 @@
 
   let newGameMenu: any;
 
-  let name = $state("");
-  let greetMsg = $state("");
   let games: Game[] = $state([]);
   let selectedGameIndex = $state(0);
 
@@ -26,6 +24,11 @@
 
   function editGame(game: Game) {
     newGameMenu.startEditGame(game);
+  }
+
+  async function launchGame(game: Game) {
+    const res = await invoke("launch_game", { command: game.launch_command });
+    console.log(res);
   }
 </script>
 
@@ -52,7 +55,12 @@
         <p class="text-center">{selectedGame.description}</p>
       </div>
       <div class="w-full flex flex-row gap-4">
-        <button class="bg-green-400 p-4 w-full cursor-pointer">Start</button>
+        <button
+          class="bg-green-400 p-4 w-full cursor-pointer"
+          onclick={() => launchGame(selectedGame)}
+        >
+          Start
+        </button>
         <button
           class="bg-slate-400 p-4 cursor-pointer w-full"
           onclick={() => selectedGame && editGame(selectedGame)}

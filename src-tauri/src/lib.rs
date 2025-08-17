@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, process::Command};
 
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct Game {
@@ -19,13 +19,15 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn add_game(game: Game) {
+fn add_game(game: Game) -> Result<(), String> {
     println!("{game:?}");
     let toml_data = fs::read_to_string("save.toml").unwrap();
     let mut saved_games: SavedGames = toml::from_str(&toml_data).unwrap();
     saved_games.games.push(game);
     let toml_data = toml::to_string(&saved_games).unwrap();
-    let _res = fs::write("save.toml", toml_data);
+    fs::write("save.toml", toml_data).map_err(|err| err.to_string())?;
+
+    Ok(())
 }
 
 #[tauri::command]
@@ -50,6 +52,21 @@ fn current_games() -> Vec<Game> {
     saved_games.games
 }
 
+#[tauri::command]
+fn launch_game(command: String) -> Result<(), String> {
+    println!("Executing {command}");
+
+    let mut parts = command.split_whitespace();
+    let program = parts.next().ok_or("Empty command")?;
+    let args: Vec<&str> = parts.collect();
+    Command::new(program)
+        .args(args)
+        .spawn()
+        .map_err(|err| err.to_string())?;
+
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -58,7 +75,8 @@ pub fn run() {
             greet,
             add_game,
             current_games,
-            edit_game
+            edit_game,
+            launch_game,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

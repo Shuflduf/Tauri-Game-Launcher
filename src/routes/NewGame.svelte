@@ -60,6 +60,23 @@
     newLaunch = "";
     newDesc = "";
   }
+
+  function onPresetSelected(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    console.log(target.value);
+    switch (target.value) {
+      case "exe":
+        // invoke("select_exe")
+        break;
+      case "flatpak":
+        newLaunch =
+          "flatpak run com.valvesoftware.Steam steam://run/{STEAM ID}";
+        break;
+      case "steam":
+        newLaunch = "steam steam://run/{STEAM ID}";
+        break;
+    }
+  }
 </script>
 
 <button
@@ -77,16 +94,23 @@
         bind:value={newName}
       />
 
-      <input
-        placeholder="Launch Command"
-        class="w-full p-4 bg-slate-500 font-mono"
-        bind:value={newLaunch}
-      />
       <textarea
         placeholder="Description"
         class="w-full p-4 bg-slate-500 font-mono resize-none"
         bind:value={newDesc}
       ></textarea>
+      <div class="flex flex-row gap-4">
+        <input
+          placeholder="Launch Command"
+          class="w-full p-4 bg-slate-500 font-mono"
+          bind:value={newLaunch}
+        />
+        <select onchange={onPresetSelected}>
+          <option value="steam">Steam</option>
+          <option value="exe">(Windows) .exe</option>
+          <option value="flatpak">(Linux) Flatpak Steam</option>
+        </select>
+      </div>
       <div class="flex flex-row gap-4">
         <input
           type="submit"
