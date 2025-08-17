@@ -1,5 +1,7 @@
 use std::{fs, process::Command};
 
+// Games are stored in save.toml in this format. They are automatically converted to and from this
+// struct with the serde crate
 #[derive(serde::Deserialize, serde::Serialize, Debug, PartialEq)]
 pub struct Game {
     pub name: String,
@@ -9,6 +11,7 @@ pub struct Game {
     pub text_color: String,
 }
 
+// The format of save.toml. It's an option in case the file is empty.
 #[derive(serde::Deserialize, serde::Serialize)]
 struct SavedGames {
     games: Option<Vec<Game>>,
@@ -21,6 +24,7 @@ impl SavedGames {
 }
 
 
+// Creates save if doesn't exist, and parses is automatically into SavedGames
 fn read_save_data() -> Result<SavedGames, String> {
     let path = "save.toml";
     if !std::path::Path::new(path).exists() {
@@ -35,6 +39,9 @@ fn write_save_data(data: SavedGames) -> Result<(), String> {
     fs::write("save.toml", toml_data).map_err(|err| err.to_string())
 }
 
+// You could handle file picking in the frontend with <input type="file">, and it's probably a
+// better idea that what I did here, so this is more of a showcase of how to write code that does
+// different things depending on the OS
 #[tauri::command]
 fn select_app() -> Result<String, String> {
     use rfd::FileDialog;
@@ -74,6 +81,8 @@ fn select_app() -> Result<String, String> {
 }
 
 
+// Most of these functions are very similar, and they each only do one thing. However, it makes
+// organization very easy.
 #[tauri::command]
 fn add_game(game: Game) -> Result<(), String> {
     let mut saved_games = read_save_data()?;
