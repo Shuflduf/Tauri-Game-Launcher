@@ -3,9 +3,11 @@
   import { onMount } from "svelte";
   import NewGame from "./NewGame.svelte";
   import type { Game } from "../lib";
+  import ErrorPopup from "./ErrorPopup.svelte";
 
   let newGameMenu: any;
 
+  let errorMessage = $state("");
   let games: Game[] = $state([]);
   let selectedGameIndex = $state(0);
   let selectedGame: Game = $derived(games[selectedGameIndex]);
@@ -15,7 +17,13 @@
   });
 
   async function refresh() {
-    games = await invoke("current_games");
+    invoke<Game[]>("current_games")
+      .then((newGames: Game[]) => {
+        games = newGames;
+      })
+      .catch((err: string) => {
+        errorMessage = err;
+      });
   }
 
   function onGameSelected(index: number) {
@@ -31,6 +39,8 @@
     console.log(res);
   }
 </script>
+
+<ErrorPopup message={errorMessage} />
 
 <div class="flex flex-row p-4 gap-4 w-screen h-screen">
   <div class="flex flex-col gap-4 overflow-y-auto w-40">

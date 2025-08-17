@@ -99,6 +99,7 @@
 >
   New Game
 </button>
+
 {#if menuOpen}
   <div class="fixed top-0 left-0 w-full h-full p-8 backdrop-blur-md text-white">
     <div class="p-4 h-full bg-slate-400 flex flex-col gap-4">

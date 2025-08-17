@@ -23,35 +23,38 @@ fn greet(name: &str) -> String {
 #[tauri::command]
 fn add_game(game: Game) -> Result<(), String> {
     println!("{game:?}");
-    let toml_data = fs::read_to_string("save.toml").unwrap();
-    let mut saved_games: SavedGames = toml::from_str(&toml_data).unwrap();
+    let toml_data = fs::read_to_string("save.toml").map_err(|err| err.to_string())?;
+    let mut saved_games: SavedGames = toml::from_str(&toml_data).map_err(|err| err.to_string())?;
     saved_games.games.push(game);
-    let toml_data = toml::to_string(&saved_games).unwrap();
+    let toml_data = toml::to_string(&saved_games).map_err(|err| err.to_string())?;
     fs::write("save.toml", toml_data).map_err(|err| err.to_string())?;
 
     Ok(())
 }
 
 #[tauri::command]
-fn edit_game(id: String, game: Game) {
+fn edit_game(id: String, game: Game) -> Result<(), String> {
     println!("{id} -> {game:?}");
-    let toml_data = fs::read_to_string("save.toml").unwrap();
-    let mut saved_games: SavedGames = toml::from_str(&toml_data).unwrap();
+    let toml_data = fs::read_to_string("save.toml").map_err(|err| err.to_string())?;
+    let mut saved_games: SavedGames = toml::from_str(&toml_data).map_err(|err| err.to_string())?;
     for g in saved_games.games.iter_mut() {
         if g.name == id {
             *g = game;
             break;
         }
     }
-    let toml_data = toml::to_string(&saved_games).unwrap();
-    let _res = fs::write("save.toml", toml_data);
+    let toml_data = toml::to_string(&saved_games).map_err(|err| err.to_string())?;
+    fs::write("save.toml", toml_data).map_err(|err| err.to_string())?;
+
+    Ok(())
 }
 
 #[tauri::command]
-fn current_games() -> Vec<Game> {
-    let toml_data = fs::read_to_string("save.toml").unwrap();
-    let saved_games: SavedGames = toml::from_str(&toml_data).unwrap();
-    saved_games.games
+fn current_games() -> Result<Vec<Game>, String> {
+    let toml_data = fs::read_to_string("save.toml").map_err(|err| err.to_string())?;
+    let saved_games: SavedGames = toml::from_str(&toml_data).map_err(|err| err.to_string())?;
+
+    Ok(saved_games.games)
 }
 
 #[tauri::command]
