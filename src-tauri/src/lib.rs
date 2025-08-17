@@ -20,6 +20,7 @@ impl SavedGames {
     }
 }
 
+
 fn read_save_data() -> Result<SavedGames, String> {
     let path = "save.toml";
     if !std::path::Path::new(path).exists() {
@@ -35,6 +36,45 @@ fn write_save_data(data: SavedGames) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn select_app() -> Result<String, String> {
+    use rfd::FileDialog;
+
+    #[cfg(target_os = "windows")]
+    {
+        if let Some(path) = FileDialog::new().add_filter("Executable", &["exe"]).pick_file() {
+            Ok(path.display().to_string())
+        } else {
+            Err("No file selected".to_string())
+        }
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        if let Some(path) = FileDialog::new().add_filter("Executable", &["AppImage", "sh"]).pick_file() {
+            Ok(path.display().to_string())
+        } else {
+            Err("No file selected".to_string())
+        }
+    }
+
+    // imma be fr this might not work, i dont have a mac mini to test this on... YET!
+    #[cfg(target_os = "macos")]
+    {
+        if let Some(path) = FileDialog::new().add_filter("Application", &["app"]).pick_folder() {
+            Ok(format!("open \"{}\"", path.display()))
+        } else {
+            Err("No application selected".to_string())
+        }
+    }
+
+    #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
+    {
+        Err("This command is not supported on this OS.".to_string())
+    }
+}
+
+
+#[tauri::command]
 fn add_game(game: Game) -> Result<(), String> {
     let mut saved_games = read_save_data()?;
     saved_games.games_mut().push(game);
@@ -42,6 +82,7 @@ fn add_game(game: Game) -> Result<(), String> {
 
     Ok(())
 }
+
 
 #[tauri::command]
 fn edit_game(id: String, game: Game) -> Result<(), String> {
@@ -57,13 +98,16 @@ fn edit_game(id: String, game: Game) -> Result<(), String> {
     Ok(())
 }
 
+
 #[tauri::command]
 fn current_games() -> Result<Vec<Game>, String> {
     Ok(read_save_data()?.games.unwrap_or_default())
 }
 
+
 #[tauri::command]
 fn launch_game(command: String) -> Result<(), String> {
+    println!("Running {command}");
     let mut parts = command.split_whitespace();
     let program = parts.next().ok_or("Empty command")?;
     let args: Vec<&str> = parts.collect();
@@ -75,6 +119,7 @@ fn launch_game(command: String) -> Result<(), String> {
     Ok(())
 }
 
+
 #[tauri::command]
 fn delete_game(game: Game) -> Result<(), String> {
     let mut saved_games = read_save_data()?;
@@ -84,6 +129,7 @@ fn delete_game(game: Game) -> Result<(), String> {
 
     Ok(())
 }
+
 
 #[tauri::command(rename_all = "snake_case")]
 fn move_game(game_index: i32, new_index: i32) -> Result<(), String> {
@@ -97,11 +143,13 @@ fn move_game(game_index: i32, new_index: i32) -> Result<(), String> {
     Ok(())
 }
 
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
+            select_app,
             add_game,
             current_games,
             edit_game,

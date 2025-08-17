@@ -1,20 +1,20 @@
 [[games]]
 name = "tauri"
-launch_command = ""
+launch_command = '"/bin/ls"'
 description = "i love it"
 bg_color = "#1c71d8"
 text_color = "#f9f06b"
 
 [[games]]
 name = "DELTARUNE"
-launch_command = "flatpak run com.valvesoftware.Steam steam://run/480"
+launch_command = '"/home/shuflduf/Downloads/Lunar Client-3.4.6-ow.AppImage"'
 description = "deltrunening it"
 bg_color = "#000000"
 text_color = "#ffffff"
 
 [[games]]
 name = "LONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGG"
-launch_command = ""
+launch_command = "./home/shuflduf/Downloads/Your Only Move Is HUSTLE/YourOnlyMoveIsHUSTLE.exe"
 description = "LONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGGLONGGGGGGGGGGGGGGGGGGG"
 bg_color = "#cad5e2"
 text_color = "#000000"

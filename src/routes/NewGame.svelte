@@ -81,8 +81,10 @@
   function onPresetSelected(event: Event) {
     const target = event.target as HTMLSelectElement;
     switch (target.value) {
-      case "exe":
-        // invoke("select_exe")
+      case "app":
+        invoke<string>("select_app")
+          .then((launchCommand: string) => (newLaunch = `"${launchCommand}"`))
+          .catch((err: string) => onError?.(err));
         break;
       case "flatpak":
         newLaunch =
@@ -92,6 +94,7 @@
         newLaunch = "steam steam://run/{STEAM ID}";
         break;
     }
+    target.value = "default";
   }
 
   function deleteGame() {
@@ -135,8 +138,9 @@
           bind:value={newLaunch}
         />
         <select onchange={onPresetSelected} class="text-black">
+          <option value="default">Presets</option>
           <option value="steam">Steam</option>
-          <option value="exe">(Windows) .exe</option>
+          <option value="app">App</option>
           <option value="flatpak">(Linux) Flatpak Steam</option>
         </select>
       </div>
