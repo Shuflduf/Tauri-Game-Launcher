@@ -105,7 +105,7 @@
 </script>
 
 <button
-  class="w-32 cursor-pointer min-h-20 bg-slate-300"
+  class="min-w-32 cursor-pointer min-h-20 bg-slate-300"
   onclick={startAddGame}
 >
   New Game

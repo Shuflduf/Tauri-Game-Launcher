@@ -65,9 +65,9 @@
       <div style="background-color: {game.bg_color}; color: {game.text_color}">
         <button
           onclick={() => onGameSelected(index)}
-          class="w-32 min-h-40 flex items-center cursor-pointer p-4"
+          class="min-w-32 w-full min-h-40 flex items-center cursor-pointer p-4"
         >
-          <p class="w-full font-bold text-center">
+          <p class="w-full font-bold text-center text-xl">
             {game.name}
           </p>
         </button>
