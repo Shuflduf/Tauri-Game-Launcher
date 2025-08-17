@@ -9,7 +9,8 @@
   let games: Game[] = $state([]);
 
   onMount(async () => {
-    games = await invoke("current_games");
+    // games = await invoke("current_games");
+    await refresh();
   });
 
   async function greet(event: Event) {
@@ -25,9 +26,13 @@
     };
     return newGame;
   }
+
+  async function refresh() {
+    games = await invoke("current_games");
+  }
 </script>
 
 {#each games as game}
   <p>{game.name}</p>
 {/each}
-<NewGame />
+<NewGame onAdded={refresh} />

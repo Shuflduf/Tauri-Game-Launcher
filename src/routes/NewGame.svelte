@@ -2,6 +2,8 @@
   import { invoke } from "@tauri-apps/api/core";
   import type { Game } from "../lib";
 
+  let { onAdded }: { onAdded?: () => void } = $props();
+
   let menuOpen = $state(false);
   let newName = $state("");
   let newLaunch = $state("");
@@ -14,6 +16,7 @@
     };
     await invoke("add_game", { game: newGame });
     menuOpen = false;
+    onAdded?.();
   }
 </script>
 

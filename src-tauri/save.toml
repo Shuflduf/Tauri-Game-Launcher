@@ -65,3 +65,7 @@ launch_command = "flatpak run com.valvesoftware.Steam steam://run/632360"
 [[games]]
 name = "rorr"
 launch_command = "gaming"
+
+[[games]]
+name = "gaming"
+launch_command = ""
