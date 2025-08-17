@@ -1,18 +1,14 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/core";
   import { onMount } from "svelte";
-
-  type Game = {
-    name: string;
-    launch_command: string;
-  };
+  import NewGame from "./NewGame.svelte";
+  import type { Game } from "../lib";
 
   let name = $state("");
   let greetMsg = $state("");
   let games: Game[] = $state([]);
 
   onMount(async () => {
-    // games.push(tmpGame());
     games = await invoke("current_games");
   });
 
@@ -20,12 +16,6 @@
     event.preventDefault();
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
     greetMsg = await invoke("greet", { name });
-  }
-
-  async function addGame(event: Event) {
-    event.preventDefault();
-    console.log({ game: tmpGame() });
-    await invoke("add_game", { game: tmpGame() });
   }
 
   function tmpGame(): Game {
@@ -40,4 +30,4 @@
 {#each games as game}
   <p>{game.name}</p>
 {/each}
-<button onclick={addGame}>Add Risky Rain</button>
+<NewGame />
