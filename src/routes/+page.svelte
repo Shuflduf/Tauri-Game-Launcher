@@ -4,35 +4,62 @@
   import NewGame from "./NewGame.svelte";
   import type { Game } from "../lib";
 
+  let newGameMenu: any;
+
   let name = $state("");
   let greetMsg = $state("");
   let games: Game[] = $state([]);
+  let selectedGameIndex = $state(0);
 
   onMount(async () => {
     // games = await invoke("current_games");
     await refresh();
   });
 
-  async function greet(event: Event) {
-    event.preventDefault();
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    greetMsg = await invoke("greet", { name });
-  }
-
-  function tmpGame(): Game {
-    let newGame: Game = {
-      name: "Risk of Rain 2",
-      launch_command: "flatpak run com.valvesoftware.Steam steam://run/632360",
-    };
-    return newGame;
-  }
-
   async function refresh() {
     games = await invoke("current_games");
   }
+
+  function onGameSelected(index: number) {
+    selectedGameIndex = index;
+  }
+
+  function editGame(game: Game) {
+    newGameMenu.startEditGame(game);
+  }
 </script>
 
-{#each games as game}
-  <p>{game.name}</p>
-{/each}
-<NewGame onAdded={refresh} />
+<div class="flex flex-row p-4 gap-4 w-screen h-screen">
+  <div class="flex flex-col gap-4 overflow-y-auto w-40">
+    {#each games as game, index}
+      <button
+        onclick={() => onGameSelected(index)}
+        class="bg-slate-300 w-32 min-h-40 flex items-center p-4 cursor-pointer"
+      >
+        <p class="text-center w-full">
+          {game.name}
+        </p>
+      </button>
+    {/each}
+    <NewGame onChange={refresh} bind:this={newGameMenu} />
+  </div>
+  <div class="bg-slate-300 h-full w-full p-4 flex justify-between flex-col">
+    {#if games[selectedGameIndex]}
+      {@const selectedGame = games[selectedGameIndex]}
+      <div>
+        <h1 class="text-center text-4xl font-bold">{selectedGame.name}</h1>
+        <hr class="my-4" />
+        <p class="text-center">{selectedGame.description}</p>
+      </div>
+      <div class="w-full flex flex-row gap-4">
+        <button class="bg-green-400 p-4 w-full cursor-pointer">Start</button>
+        <button
+          class="bg-slate-400 p-4 cursor-pointer w-full"
+          onclick={() => selectedGame && editGame(selectedGame)}
+        >
+          Edit
+        </button>
+      </div>
+    {/if}
+  </div>
+</div>

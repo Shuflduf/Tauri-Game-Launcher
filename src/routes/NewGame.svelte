@@ -2,25 +2,72 @@
   import { invoke } from "@tauri-apps/api/core";
   import type { Game } from "../lib";
 
-  let { onAdded }: { onAdded?: () => void } = $props();
+  let {
+    onChange,
+  }: {
+    onChange?: () => void;
+  } = $props();
 
   let menuOpen = $state(false);
   let newName = $state("");
   let newLaunch = $state("");
+  let newDesc = $state("");
 
-  async function addGame(event: Event) {
-    event.preventDefault();
+  let editing = $state(false);
+  let oldGame: Game;
+
+  function startAddGame() {
+    menuOpen = true;
+    editing = false;
+    resetInputs();
+  }
+
+  async function addGame() {
     const newGame: Game = {
       name: newName,
       launch_command: newLaunch,
+      description: newDesc,
     };
     await invoke("add_game", { game: newGame });
     menuOpen = false;
-    onAdded?.();
+    onChange?.();
+  }
+
+  export function startEditGame(game: Game) {
+    menuOpen = true;
+    editing = true;
+    oldGame = game;
+
+    newName = game.name;
+    newLaunch = game.launch_command;
+    newDesc = game.description;
+  }
+
+  async function editGame() {
+    // console.log(game);
+    const newGame: Game = {
+      name: newName,
+      launch_command: newLaunch,
+      description: newDesc,
+    };
+    await invoke("edit_game", { id: oldGame.name, game: newGame });
+    menuOpen = false;
+    onChange?.();
+  }
+
+  function resetInputs() {
+    newName = "";
+    newLaunch = "";
+    newDesc = "";
   }
 </script>
 
-<button onclick={() => (menuOpen = true)}>New Game</button>
+<button
+  class="w-32 cursor-pointer min-h-20 bg-slate-300"
+  onclick={startAddGame}
+>
+  New Game
+</button>
 {#if menuOpen}
   <div class="fixed top-0 left-0 w-full h-full p-8 backdrop-blur-md">
     <div class="p-4 h-full bg-slate-400 flex flex-col gap-4">
@@ -29,17 +76,31 @@
         class="w-full p-4 bg-slate-500"
         bind:value={newName}
       />
+
       <input
         placeholder="Launch Command"
         class="w-full p-4 bg-slate-500 font-mono"
         bind:value={newLaunch}
       />
-      <input
-        type="submit"
-        class="p-4 w-full bg-slate-500 cursor-pointer"
-        value="Add New Game"
-        onclick={addGame}
-      />
+      <textarea
+        placeholder="Description"
+        class="w-full p-4 bg-slate-500 font-mono resize-none"
+        bind:value={newDesc}
+      ></textarea>
+      <div class="flex flex-row gap-4">
+        <input
+          type="submit"
+          class="p-4 w-full bg-green-400 cursor-pointer"
+          value={editing ? "Confirm Changes" : "Add New Game"}
+          onclick={editing ? editGame : addGame}
+        />
+        <input
+          type="submit"
+          class="p-4 w-full bg-red-400 cursor-pointer"
+          value="Cancel"
+          onclick={() => (menuOpen = false)}
+        />
+      </div>
     </div>
   </div>
 {/if}
