@@ -10,7 +10,6 @@
   let selectedGameIndex = $state(0);
 
   onMount(async () => {
-    // games = await invoke("current_games");
     await refresh();
   });
 
@@ -58,6 +57,7 @@
         <button
           class="bg-green-400 p-4 w-full cursor-pointer"
           onclick={() => launchGame(selectedGame)}
+          title={selectedGame.launch_command}
         >
           Start
         </button>

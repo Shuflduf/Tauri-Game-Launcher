@@ -86,7 +86,7 @@
   New Game
 </button>
 {#if menuOpen}
-  <div class="fixed top-0 left-0 w-full h-full p-8 backdrop-blur-md">
+  <div class="fixed top-0 left-0 w-full h-full p-8 backdrop-blur-md text-white">
     <div class="p-4 h-full bg-slate-400 flex flex-col gap-4">
       <input
         placeholder="Name"
@@ -105,7 +105,7 @@
           class="w-full p-4 bg-slate-500 font-mono"
           bind:value={newLaunch}
         />
-        <select onchange={onPresetSelected}>
+        <select onchange={onPresetSelected} class="text-black">
           <option value="steam">Steam</option>
           <option value="exe">(Windows) .exe</option>
           <option value="flatpak">(Linux) Flatpak Steam</option>
