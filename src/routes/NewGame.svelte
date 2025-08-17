@@ -1,6 +1,7 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/core";
   import type { Game } from "../lib";
+  import { fly } from "svelte/transition";
 
   let {
     onChange,
@@ -112,7 +113,10 @@
 
 {#if menuOpen}
   <div class="fixed top-0 left-0 w-full h-full p-8 backdrop-blur-md text-white">
-    <div class="p-4 h-full bg-slate-400 flex flex-col gap-4">
+    <div
+      class="p-4 h-full bg-slate-400 flex flex-col gap-4"
+      transition:fly={{ y: 10, duration: 100 }}
+    >
       <input
         placeholder="Name"
         class="w-full p-4 bg-slate-500"

@@ -24,12 +24,8 @@
 
   function refresh() {
     invoke<Game[]>("current_games")
-      .then((newGames: Game[]) => {
-        games = newGames;
-      })
-      .catch((err: string) => {
-        errorMessage = err;
-      });
+      .then((newGames: Game[]) => (games = newGames))
+      .catch((err: string) => (errorMessage = err));
   }
 
   function onGameSelected(index: number) {
