@@ -1,7 +1,12 @@
-# Tauri + SvelteKit + TypeScript
+# Tauri Game Launcher 
+*Example Project for the [Fizzler YSWS](https://fizzler.vercel.app/)*
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+## Features
+- TOML based save file
+- Per-game theming
+- Steam support
+- Flatpak Steam support
+- Really really good Rust error handling ([Rust Entrypoint](src-tauri/src/lib.rs))
+- Decent frontend error handling ([Svelte Entrypoint](src/routes/+page.svelte))
 
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+![](https://github.com/user-attachments/assets/a985898c-e55b-4161-b943-aefda7843c73)
